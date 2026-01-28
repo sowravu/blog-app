@@ -48,7 +48,9 @@ export default function BlogDetailPage() {
 
     return (
         <>
-            <Navbar />
+            <div className="bg-gradient-to-r from-[#2a0e61] to-[#000000]">
+                <Navbar />
+            </div>
             <div className="min-h-screen bg-gray-50 pt-12 pb-24">
                 <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
                     <Link href="/" className="inline-flex items-center text-indigo-600 hover:text-indigo-800 mb-8 transition-colors">

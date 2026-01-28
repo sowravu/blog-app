@@ -2,11 +2,12 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Blog from '@/models/Blog';
 import jwt from 'jsonwebtoken';
-import { headers } from 'next/headers';
+import { cookies } from 'next/headers';
 
 // Helper to check for admin role
 const checkAdmin = async (req: Request) => {
-    const token = (await headers()).get('cookie')?.split('token=')[1]?.split(';')[0];
+    const cookieStore = await cookies();
+    const token = cookieStore.get('token')?.value;
 
     if (!token) return null;
 

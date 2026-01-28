@@ -2,18 +2,13 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Blog from '@/models/Blog';
 import jwt from 'jsonwebtoken';
-import { headers } from 'next/headers';
+import { cookies } from 'next/headers';
 
 // Helper to verify Admin
 const verifyAdmin = async () => {
     try {
-        const headerList = await headers();
-        const cookieHeader = headerList.get('cookie');
-        if (!cookieHeader) return false;
-
-        // Simple parsing, better to use a library or Next.js cookies() in real app helper
-        const tokenMatch = cookieHeader.match(/token=([^;]+)/);
-        const token = tokenMatch ? tokenMatch[1] : null;
+        const cookieStore = await cookies();
+        const token = cookieStore.get('token')?.value;
 
         if (!token) return false;
 
