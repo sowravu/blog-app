@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tech Blog Application
 
-## Getting Started
+A full-stack blogging platform built with modern web technologies. This application allows users to read, write, and interact with blog posts in a clean, responsive, and animated environment.
 
-First, run the development server:
+## 🚀 Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **User Authentication**: Secure signup and login functionality using JWT (JSON Web Tokens) and bcrypt for password hashing.
+- **Blog Management**: Full CRUD (Create, Read, Update, Delete) operations for blog posts.
+- **Rich Media**: Seamless image uploading and management integrated with Cloudinary.
+- **Engaging Interactions**: Leave comments on blog posts to engage with the authors and other readers.
+- **User Moderation**: App features a user blocking/admin system to manage interactions and maintain a safe environment.
+- **Responsive & Animated UI**: Built with Tailwind CSS for broad device compatibility and Framer Motion for smooth, engaging animations.
+- **Modern Architecture**: Leverages the power of Next.js App Router and React 19 for optimal performance.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Technology Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Frontend**: Next.js 16, React 19, Tailwind CSS v4, Framer Motion, Lucide React
+- **Backend**: Next.js API Routes
+- **Database**: MongoDB with Mongoose ORM
+- **Authentication**: JSON Web Tokens (JWT), `jose`, `bcryptjs`
+- **Image Storage**: Cloudinary
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ⚙️ Getting Started
 
-## Learn More
+### Prerequisites
 
-To learn more about Next.js, take a look at the following resources:
+- Node.js (v18 or higher recommended)
+- MongoDB Database (Local or MongoDB Atlas)
+- Cloudinary Account (for image hosting)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/sowravuu/blog-app.git
+   cd blog-app
+   ```
 
-## Deploy on Vercel
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. Set up environment variables:
+   Create a `.env` or `.env.local` file in the root directory and add the following configurations:
+   ```env
+   MONGODB_URI=your_mongodb_connection_string
+   JWT_SECRET=your_jwt_secret_key
+   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+   CLOUDINARY_API_KEY=your_cloudinary_api_key
+   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser to interact with the application.
+
+## 🌐 Live Demo
+
+Check out the live version of the project: [Tech Blog - sowravuu.live](https://techblog.sowravuu.live/)
