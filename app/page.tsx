@@ -62,12 +62,12 @@ export default function Home() {
             <div className="grid gap-8 max-w-lg mx-auto lg:grid-cols-3 lg:max-w-none">
               {blogs.map((blog) => (
                 <Link key={blog._id} href={`/blog/${blog._id}`} className="group flex flex-col rounded-xl shadow-lg border border-white/10 overflow-hidden hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 bg-[#1e293b]/50 backdrop-blur-sm h-full transform hover:-translate-y-1">
-                  <div className="flex-shrink-0 relative overflow-hidden h-48">
+                  <div className="flex-shrink-0 relative overflow-hidden aspect-video w-full">
                     {blog.image ? (
                       <img
                         src={blog.image}
                         alt={blog.title}
-                        className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="absolute inset-0 h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                     ) : (
                       <div className="h-full w-full bg-[#0f172a] flex items-center justify-center text-gray-500">

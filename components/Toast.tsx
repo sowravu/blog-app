@@ -14,10 +14,10 @@ export default function Toast({ message, isVisible, type = "success" }: ToastPro
         <AnimatePresence>
             {isVisible && (
                 <motion.div
-                    initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                    className="fixed bottom-6 right-6 z-50 flex items-center space-x-3 bg-[#1e293b]/90 backdrop-blur-md border border-white/10 px-6 py-4 rounded-2xl shadow-2xl shadow-purple-500/20"
+                    initial={{ opacity: 0, x: -50, scale: 0.9 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9, x: -20 }}
+                    className="fixed top-6 left-6 z-50 flex items-center space-x-3 bg-[#1e293b]/90 backdrop-blur-md border border-white/10 px-6 py-4 rounded-2xl shadow-2xl shadow-purple-500/20"
                 >
                     {type === "success" ? (
                         <CheckCircle className="w-6 h-6 text-green-400" />
