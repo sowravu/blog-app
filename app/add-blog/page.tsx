@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
 import { useRouter } from "next/navigation";
+import Toast from "@/components/Toast";
 
 export default function AddBlog() {
     const { user } = useAuth();
@@ -14,6 +15,7 @@ export default function AddBlog() {
     const [image, setImage] = useState("");
     const [uploading, setUploading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showToast, setShowToast] = useState(false);
 
     // Redirect to login if not authenticated
     if (!user) {
@@ -71,7 +73,10 @@ export default function AddBlog() {
             });
 
             if (res.ok) {
-                router.push('/');
+                setShowToast(true);
+                setTimeout(() => {
+                    router.push('/');
+                }, 1500);
             } else {
                 const data = await res.json();
                 alert(data.message || data.error || 'Failed to save blog');
@@ -163,6 +168,7 @@ export default function AddBlog() {
                     </form>
                 </div>
             </div>
+            <Toast message="Blog added successfully!" isVisible={showToast} />
         </div>
     );
 }

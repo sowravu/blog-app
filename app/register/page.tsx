@@ -6,6 +6,7 @@ import { motion, Variants } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Toast from "@/components/Toast";
 
 const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -37,6 +38,7 @@ export default function RegisterPage() {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
+    const [showToast, setShowToast] = useState(false);
     const { user } = useAuth();
     const router = useRouter();
 
@@ -65,8 +67,11 @@ export default function RegisterPage() {
                 throw new Error(data.message || 'Something went wrong');
             }
 
-            // Automatically redirect to login or login directly
-            router.push('/login');
+            // Show success toast and redirect after delay
+            setShowToast(true);
+            setTimeout(() => {
+                router.push('/login');
+            }, 1500);
         } catch (err: any) {
             setError(err.message);
         }
@@ -162,6 +167,7 @@ export default function RegisterPage() {
                     </div>
                 </motion.div>
             </div>
+            <Toast message="User created successfully!" isVisible={showToast} />
         </div>
     );
 }
