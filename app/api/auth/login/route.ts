@@ -25,6 +25,13 @@ export async function POST(req: Request) {
             );
         }
 
+        if (user.isBlocked) {
+            return NextResponse.json(
+                { message: 'Your account has been blocked by an administrator.' },
+                { status: 403 }
+            );
+        }
+
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return NextResponse.json(

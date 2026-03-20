@@ -24,7 +24,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     const { id } = await params;
 
     try {
-        const blog = await Blog.findById(id).populate('author', 'name');
+        const blog = await Blog.findById(id)
+            .populate('author', 'name')
+            .populate('comments.user', 'name');
         if (!blog) {
             return NextResponse.json({ success: false }, { status: 404 });
         }

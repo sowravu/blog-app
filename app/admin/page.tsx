@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { Plus, Trash, Edit, X } from "lucide-react";
+import { Plus, Trash, Edit, X, Users, FileText, ShieldBan, ShieldCheck } from "lucide-react";
 import Link from 'next/link';
 import Navbar from "@/components/Navbar";
 
@@ -22,6 +22,8 @@ export default function AdminDashboard() {
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [editingBlog, setEditingBlog] = useState<Blog | null>(null);
+    const [activeTab, setActiveTab] = useState<"blogs" | "users">("blogs");
+    const [usersList, setUsersList] = useState<any[]>([]);
 
     // Form State
     const [title, setTitle] = useState("");
@@ -31,7 +33,34 @@ export default function AdminDashboard() {
 
     useEffect(() => {
         fetchBlogs();
+        fetchUsers();
     }, []);
+
+    const fetchUsers = async () => {
+        try {
+            const res = await fetch('/api/users');
+            const data = await res.json();
+            if (data.success) {
+                setUsersList(data.data);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleBlockUser = async (id: string) => {
+        try {
+            const res = await fetch(`/api/users/${id}/block`, { method: 'PUT' });
+            if (res.ok) {
+                setUsersList(usersList.map(u => u._id === id ? { ...u, isBlocked: !u.isBlocked } : u));
+            } else {
+                const data = await res.json();
+                alert(data.message || 'Failed to toggle block status');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const fetchBlogs = async () => {
         try {
@@ -156,59 +185,140 @@ export default function AdminDashboard() {
             <div className="p-8">
                 <div className="max-w-6xl mx-auto">
                     <div className="flex justify-between items-center mb-8">
-                        <h1 className="text-3xl font-extrabold text-white tracking-tight">Admin Dashboard</h1>
-                        <button
-                            onClick={() => { resetForm(); setShowModal(true); }}
-                            className="flex items-center space-x-2 bg-[#a855f7] text-white px-5 py-2.5 rounded-lg font-bold hover:bg-[#9333ea] transition-all shadow-lg shadow-purple-500/20"
-                        >
-                            <Plus className="w-5 h-5" />
-                            <span>New Post</span>
-                        </button>
+                        <div className="flex items-center space-x-6 sm:space-x-8 flex-wrap gap-y-4">
+                            <h1 className="text-3xl font-extrabold text-white tracking-tight">Admin Dashboard</h1>
+                            <div className="flex bg-[#0f172a] rounded-xl p-1 border border-white/10">
+                                <button
+                                    onClick={() => setActiveTab('blogs')}
+                                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'blogs' ? 'bg-[#a855f7] text-white shadow-lg shadow-purple-500/20' : 'text-gray-400 hover:text-white'}`}
+                                >
+                                    <FileText className="w-4 h-4" />
+                                    <span>Blogs</span>
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab('users')}
+                                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'users' ? 'bg-[#a855f7] text-white shadow-lg shadow-purple-500/20' : 'text-gray-400 hover:text-white'}`}
+                                >
+                                    <Users className="w-4 h-4" />
+                                    <span>Users</span>
+                                </button>
+                            </div>
+                        </div>
+                        {activeTab === 'blogs' && (
+                            <button
+                                onClick={() => { resetForm(); setShowModal(true); }}
+                                className="flex items-center space-x-2 bg-[#a855f7] text-white px-5 py-2.5 rounded-lg font-bold hover:bg-[#9333ea] transition-all shadow-lg shadow-purple-500/20"
+                            >
+                                <Plus className="w-5 h-5" />
+                                <span>New Post</span>
+                            </button>
+                        )}
                     </div>
 
-                    <div className="bg-[#1e293b]/50 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-white/10">
-                        <table className="w-full text-left">
-                            <thead className="bg-[#0f172a]/60 border-b border-white/10">
-                                <tr>
-                                    <th className="px-6 py-4 font-semibold text-gray-300">Title</th>
-                                    <th className="px-6 py-4 font-semibold text-gray-300">Author</th>
-                                    <th className="px-6 py-4 font-semibold text-gray-300">Date</th>
-                                    <th className="px-6 py-4 font-semibold text-gray-300 text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-white/5">
-                                {blogs.map((blog) => (
-                                    <tr key={blog._id} className="hover:bg-white/5 transition-colors">
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center space-x-4">
-                                                {blog.image ? (
-                                                    <img src={blog.image} alt="" className="w-12 h-12 rounded-lg object-cover border border-white/10" />
-                                                ) : (
-                                                    <div className="w-12 h-12 rounded-lg bg-[#0f172a] flex items-center justify-center border border-white/10 text-xs text-gray-500">No Img</div>
-                                                )}
-                                                <span className="font-medium text-gray-200">{blog.title}</span>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 text-gray-400">{blog.author?.name || 'Unknown'}</td>
-                                        <td className="px-6 py-4 text-gray-400">
-                                            {new Date(blog.createdAt).toLocaleDateString()}
-                                        </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="flex items-center justify-end space-x-4">
-                                                <button onClick={() => openEdit(blog)} className="text-[#a855f7] hover:text-purple-400 transition-colors bg-[#a855f7]/10 p-2 rounded-lg hover:bg-[#a855f7]/20">
-                                                    <Edit className="w-4 h-4" />
-                                                </button>
-                                                <button onClick={() => handleDelete(blog._id)} className="text-red-400 hover:text-red-300 transition-colors bg-red-500/10 p-2 rounded-lg hover:bg-red-500/20">
-                                                    <Trash className="w-4 h-4" />
-                                                </button>
-                                            </div>
-                                        </td>
+                    <div className="bg-[#1e293b]/50 backdrop-blur-md rounded-2xl shadow-xl overflow-x-auto border border-white/10">
+                        {activeTab === 'blogs' ? (
+                            <table className="w-full text-left whitespace-nowrap">
+                                <thead className="bg-[#0f172a]/60 border-b border-white/10">
+                                    <tr>
+                                        <th className="px-6 py-4 font-semibold text-gray-300">Title</th>
+                                        <th className="px-6 py-4 font-semibold text-gray-300">Author</th>
+                                        <th className="px-6 py-4 font-semibold text-gray-300">Date</th>
+                                        <th className="px-6 py-4 font-semibold text-gray-300 text-right">Actions</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                        {blogs.length === 0 && (
+                                </thead>
+                                <tbody className="divide-y divide-white/5">
+                                    {blogs.map((blog) => (
+                                        <tr key={blog._id} className="hover:bg-white/5 transition-colors">
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center space-x-4">
+                                                    {blog.image ? (
+                                                        <img src={blog.image} alt="" className="w-12 h-12 rounded-lg object-cover border border-white/10" />
+                                                    ) : (
+                                                        <div className="w-12 h-12 rounded-lg bg-[#0f172a] flex items-center justify-center border border-white/10 text-xs text-gray-500">No Img</div>
+                                                    )}
+                                                    <span className="font-medium text-gray-200">{blog.title}</span>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-gray-400">{blog.author?.name || 'Unknown'}</td>
+                                            <td className="px-6 py-4 text-gray-400">
+                                                {new Date(blog.createdAt).toLocaleDateString()}
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                <div className="flex items-center justify-end space-x-4">
+                                                    <button onClick={() => openEdit(blog)} className="text-[#a855f7] hover:text-purple-400 transition-colors bg-[#a855f7]/10 p-2 rounded-lg hover:bg-[#a855f7]/20">
+                                                        <Edit className="w-4 h-4" />
+                                                    </button>
+                                                    <button onClick={() => handleDelete(blog._id)} className="text-red-400 hover:text-red-300 transition-colors bg-red-500/10 p-2 rounded-lg hover:bg-red-500/20">
+                                                        <Trash className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <table className="w-full text-left whitespace-nowrap">
+                                <thead className="bg-[#0f172a]/60 border-b border-white/10">
+                                    <tr>
+                                        <th className="px-6 py-4 font-semibold text-gray-300">Name</th>
+                                        <th className="px-6 py-4 font-semibold text-gray-300">Email</th>
+                                        <th className="px-6 py-4 font-semibold text-gray-300">Joined</th>
+                                        <th className="px-6 py-4 font-semibold text-gray-300">Status</th>
+                                        <th className="px-6 py-4 font-semibold text-gray-300 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-white/5">
+                                    {usersList.map((u) => (
+                                        <tr key={u._id} className="hover:bg-white/5 transition-colors">
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center space-x-3">
+                                                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-[#a855f7] to-[#4c1d95] flex items-center justify-center text-white font-bold text-sm shadow-inner">
+                                                        {u.name ? u.name.charAt(0).toUpperCase() : '?'}
+                                                    </div>
+                                                    <span className="font-medium text-gray-200">
+                                                        {u.name}
+                                                        {u.role === 'admin' && <span className="ml-2 text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full border border-purple-500/30">Admin</span>}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-gray-400">{u.email}</td>
+                                            <td className="px-6 py-4 text-gray-400">
+                                                {new Date(u.createdAt).toLocaleDateString()}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                {u.isBlocked ? (
+                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">
+                                                        Blocked
+                                                    </span>
+                                                ) : (
+                                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">
+                                                        Active
+                                                    </span>
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4 text-right">
+                                                <button
+                                                    onClick={() => handleBlockUser(u._id)}
+                                                    disabled={u._id === user?.id} // Prevent self block
+                                                    className={`transition-colors p-2 rounded-lg flex items-center justify-end ml-auto space-x-2 ${u.isBlocked ? 'text-green-400 bg-green-500/10 hover:bg-green-500/20' : 'text-orange-400 bg-orange-500/10 hover:bg-orange-500/20'} disabled:opacity-50 disabled:cursor-not-allowed`}
+                                                    title={u.isBlocked ? "Unblock User" : "Block User"}
+                                                >
+                                                    {u.isBlocked ? <ShieldCheck className="w-4 h-4" /> : <ShieldBan className="w-4 h-4" />}
+                                                    <span className="text-xs font-semibold">{u.isBlocked ? 'Unblock' : 'Block'}</span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        )}
+
+                        {activeTab === 'blogs' && blogs.length === 0 && (
                             <div className="p-12 text-center text-gray-400">No blogs found. Create one!</div>
+                        )}
+                        {activeTab === 'users' && usersList.length === 0 && (
+                            <div className="p-12 text-center text-gray-400">No users found.</div>
                         )}
                     </div>
                 </div>
