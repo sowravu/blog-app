@@ -80,7 +80,7 @@ export default function RegisterPage() {
                     animate="visible"
                 >
                     <motion.div variants={itemVariants} className="text-center mb-10">
-                        <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">Join Boom</h1>
+                        <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">Join TechBlog</h1>
                         <p className="text-gray-300 text-sm">Create your account to get started.</p>
                     </motion.div>
 

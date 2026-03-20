@@ -77,7 +77,7 @@ export default function LoginPage() {
           animate="visible"
         >
           <motion.div variants={itemVariants} className="text-center mb-10">
-            <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">Welcome to Boom</h1>
+            <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">Welcome to TechBlog</h1>
             <p className="text-gray-300 text-sm">Enter your email and password to continue.</p>
           </motion.div>
 
