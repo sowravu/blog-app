@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, Lock, User as UserIcon } from "lucide-react";
+import { Mail, Lock, User as UserIcon, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { motion, Variants } from "framer-motion";
 import { useState, useEffect } from "react";
@@ -35,6 +35,7 @@ export default function RegisterPage() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const { user } = useAuth();
     const router = useRouter();
@@ -126,12 +127,22 @@ export default function RegisterPage() {
                                     <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-purple-400 transition-colors" />
                                 </div>
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     className="block w-full pl-10 pr-10 py-3 bg-[#1e293b] border border-transparent rounded-lg text-gray-200 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:bg-[#0f172a] transition-all sm:text-sm"
                                     placeholder="••••••••"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
+                                <div
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer z-10"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? (
+                                        <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-300 transition-colors" />
+                                    ) : (
+                                        <Eye className="h-5 w-5 text-gray-400 hover:text-gray-300 transition-colors" />
+                                    )}
+                                </div>
                             </div>
                         </motion.div>
 
