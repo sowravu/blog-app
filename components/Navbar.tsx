@@ -28,6 +28,10 @@ export default function Navbar() {
 
                         {user ? (
                             <div className="flex items-center space-x-4">
+                                <Link href="/add-blog" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                                    Add Blog
+                                </Link>
+
                                 {user.role === 'admin' && (
                                     <Link href="/admin" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">
                                         Dashboard
@@ -77,7 +81,13 @@ export default function Navbar() {
                         <Link href="/" className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">
                             Home
                         </Link>
+                        {user && (
+                            <Link href="/add-blog" className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">
+                                Add Blog
+                            </Link>
+                        )}
                         {user && user.role === 'admin' && (
+
                             <Link href="/admin" className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">
                                 Dashboard
                             </Link>
